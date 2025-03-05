@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import argparse
 
 p = argparse.ArgumentParser(prog='pizza')
@@ -7,10 +6,6 @@ p.add_argument("fobo", help= "first positional arguement which will be written f
 p.add_argument("bar", help= "second positional arguement which will be written second")
 
 p.add_argument("-v", "--verbosity", help="increase output verbosity", type=int, choices=[0,1,2])
-
-
-
-
 
 args = p.parse_args()
 
