@@ -1,29 +1,85 @@
 import argparse
 
-p = argparse.ArgumentParser(prog='pizza')
+p = argparse.ArgumentParser(prog='Pizza Dough Helper')
 
-p.add_argument("fobo", help= "first positional arguement which will be written first")
-p.add_argument("bar", help= "second positional arguement which will be written second")
+p.add_argument("-r", "--hydration", help= "hydration of final pizza dough", type=int, default=70)
+p.add_argument("-n", "--numberOfBalls", help= "Number of pizza balls you want to make", type=int, default=10)
+p.add_argument("-s", "--size", help="Size of balls", type=int, default=280)
 
-p.add_argument("-v", "--verbosity", help="increase output verbosity", type=int, choices=[0,1,2])
+p.add_argument("-p", "--poolish", help="If you want to use poolish, 1-100", type=int)
+p.add_argument("-b", "--biga", help="If you want to use biga, 1-100", type=int)
 
 args = p.parse_args()
 
+def console_output(td, hy, f, w, s, o, y, h):
+    print(f"""{numberOfballs} pizzas at {size}g makes:
+Total Dough : {td}g
+Hydration   : {hy}%
+Flour       : {f}g
+Water       : {w}g
+Salt        : {s}g
+Oil         : {o}g
+Yeast       : {y}g
+Honey       : {h}g
+    """)
 
-bool_verbosity = args.verbosity
-first_word = args.fobo
-second_word = args.bar
+def check_in_range(value, min, max):
+    if (value > max or value < min ):
+        raise argparse.ArgumentTypeError(f"{value} is out of range, allowed values are {min}-{max}")
+# Main
 
-if args.verbosity ==2:
-    print("VERY VERBOSE LOGS")
-    print(bool_verbosity)
-    print("The first positional argument was " + first_word + 
-    ". The second positional argeumetn was " + second_word + ".")
-elif args.verbosity ==1:
-    print("VERBOSE LOGS")
-    print(bool_verbosity)
-    print (f"First = {first_word}, Second = {second_word}")
-else:
-    print(bool_verbosity)
-    print(f"Running {__file__}")
-    print(first_word,second_word)
+prefermentPercentage = 0
+if (args.poolish):
+    check_in_range(args.poolish,0,100)
+    prefermentPercentage = args.poolish
+if (args.biga):
+    check_in_range(args.biga,0,100)
+    prefermentPercentage = args.biga
+
+hydration = args.hydration
+numberOfballs = args.numberOfBalls
+size = args.size
+totalDough = numberOfballs * size
+decimalPoint = 1
+
+ratio = 100 + hydration
+flour = round((totalDough / ratio) * 100 , decimalPoint)
+water = round((totalDough / ratio) * hydration, decimalPoint)
+salt = round(flour * 0.01, decimalPoint)
+oil = round(flour * 0.01, decimalPoint)
+yeast = round(flour * 0.005, decimalPoint)
+honey = round(flour * 0.005, decimalPoint)
+
+if (prefermentPercentage == 0):
+    print("No preferment")
+    console_output(totalDough,hydration,flour,water,salt,oil,yeast,honey)
+
+if (args.biga):
+    bigaFlour = round(flour * prefermentPercentage/100, decimalPoint)
+    bigaWater = round(bigaFlour * 0.5, decimalPoint)
+
+    remainingFlour = round(flour - bigaFlour,decimalPoint)
+    remainingWater = round(water - bigaWater,decimalPoint)
+    print(f"""
+BIGA - {prefermentPercentage}%
+Biga Flour      : {bigaFlour}g
+Biga Water      : {bigaWater}g
+    """)
+
+    print("Remaining")
+    console_output(totalDough,hydration,remainingFlour,remainingWater,salt,oil,yeast,honey)
+
+if (args.poolish):
+    poolishFlour = round(flour * prefermentPercentage/100, decimalPoint)
+    poolishWater = poolishFlour
+
+    remainingFlour = round(flour - poolishFlour,decimalPoint)
+    remainingWater = round(water - poolishWater,decimalPoint)
+    print(f"""
+BIGA - {prefermentPercentage}%
+Biga Flour      : {poolishFlour}g
+Biga Water      : {poolishWater}g
+    """)
+
+    print("Remaining")
+    console_output(totalDough,hydration,remainingFlour,remainingWater,salt,oil,yeast,honey)
