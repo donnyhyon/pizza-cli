@@ -13,16 +13,15 @@ args = p.parse_args()
 
 def console_output(td, hy, f, w, s, o, y, h):
     print(f"""{numberOfballs} pizzas at {size}g makes:
-Total Dough : {totalDough}g
-Hydration   : {hydration}%
-Flour       : {flour}g
-Water       : {water}g
-Salt        : {salt}g
-Oil         : {oil}g
-Yeast       : {yeast}g
-Honey       : {honey}g
+Total Dough : {td}g
+Hydration   : {hy}%
+Flour       : {f}g
+Water       : {w}g
+Salt        : {s}g
+Oil         : {o}g
+Yeast       : {y}g
+Honey       : {h}g
     """)
-
 
 def check_in_range(value, min, max):
     if (value > max or value < min ):
@@ -56,5 +55,31 @@ if (prefermentPercentage == 0):
     console_output(totalDough,hydration,flour,water,salt,oil,yeast,honey)
 
 if (args.biga):
-    biga = totalDough * prefermentPercentage
-    print(biga)
+    bigaFlour = round(flour * prefermentPercentage/100, decimalPoint)
+    bigaWater = round(bigaFlour * 0.5, decimalPoint)
+
+    remainingFlour = round(flour - bigaFlour,decimalPoint)
+    remainingWater = round(water - bigaWater,decimalPoint)
+    print(f"""
+BIGA - {prefermentPercentage}%
+Biga Flour      : {bigaFlour}g
+Biga Water      : {bigaWater}g
+    """)
+
+    print("Remaining")
+    console_output(totalDough,hydration,remainingFlour,remainingWater,salt,oil,yeast,honey)
+
+if (args.poolish):
+    poolishFlour = round(flour * prefermentPercentage/100, decimalPoint)
+    poolishWater = poolishFlour
+
+    remainingFlour = round(flour - poolishFlour,decimalPoint)
+    remainingWater = round(water - poolishWater,decimalPoint)
+    print(f"""
+BIGA - {prefermentPercentage}%
+Biga Flour      : {poolishFlour}g
+Biga Water      : {poolishWater}g
+    """)
+
+    print("Remaining")
+    console_output(totalDough,hydration,remainingFlour,remainingWater,salt,oil,yeast,honey)
