@@ -23,3 +23,4 @@ pizza -b 100 -r 65 # 100% biga, 65% hydration
 ### TODO
 - add warning when poolish water > total water.
 - tests
+- add custom bakers percentages
